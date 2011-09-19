@@ -1,0 +1,23 @@
+body{ margin:0px; font-family:"Helvetica", "Ariel";}
+#page {
+background:white;
+width:800px;
+height:100%;
+margin:auto;
+}
+#title img { 
+    left: -14px;
+    position: relative;
+    top: 15px;
+}
+#navbar { background:red; height:30px; color:white; }
+#navbar ul {padding:0px;}
+#navbar ul li {
+	background:red;
+	list-style-type:none;
+	float:left;
+	padding: 3px 8px;
+}
+#navbar ul li:hover {
+	height:29px;
+}
