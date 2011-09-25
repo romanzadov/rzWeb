@@ -5,19 +5,85 @@ width:800px;
 height:100%;
 margin:auto;
 }
+#title{ position:relative;}
 #title img { 
     left: -14px;
     position: relative;
     top: 15px;
 }
-#navbar { background:red; height:30px; color:white; }
+#eye {
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	height:16px;
+	width:16px;
+	background:white;
+	
+}
+#eye:hover{cursor:pointer;}
+#eyelid{
+	position:absolute;
+	width:100%;
+	height:0;
+	top:0;
+	left:0;
+	background-color:red;
+}
+#eye-container{
+	position:absolute;	
+	top:5px;
+	right:5px;
+	display:none;
+}
+#iris {
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	height:8px;
+	width:8px;
+	background-color:red;
+	position:absolute;
+	top:9px;
+	left:9px;
+}
+#balloon {
+	background-color:red;
+	position:absolute;
+	bottom:-30px;
+	right:0px;
+	width:30px;
+	height:14px;
+	-webkit-border-radius: 100px;
+	-moz-border-radius: 100px;
+	border-radius: 100px;
+}
+#navbar { position:relative; background:red; height:27px; color:white; width:100%;}
 #navbar ul {padding:0px;}
 #navbar ul li {
 	background:red;
 	list-style-type:none;
 	float:left;
-	padding: 3px 8px;
+	width:80px;	
+	text-align:center;
+	padding-top:3px;
+	padding-bottom:3px;
+	border-left:1px solid #fff;
+}
+#navbar ul li:first-child {
+	border-left:0px;
+}
+#navbar ul li a {
+	text-decoration:none;
+	color:white;
+	outline-style:none;
+	
 }
 #navbar ul li:hover {
-	height:29px;
+	height:25px;
 }
+
+#content {
+	min-height:500px;
+	width:100%;	
+
+}#content-text { padding:40px;}
