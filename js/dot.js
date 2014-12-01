@@ -1,14 +1,12 @@
-var triangles = [];
+var triangleGroups = [];
+var orderedTriangles = [];
 var goldenRatio = (1 + Math.sqrt(5)) / 2;
 var c;
 
 function drawTriangle(triangle) {
-	c.globalAlpha = 0.01;
-	if (triangle.color) {
-		c.fillStyle = '#033';
-	} else {
-		c.fillStyle = '#303';
-	}
+	c.globalAlpha = 0.1;
+	c.fillStyle = getTriangleColor(triangle);
+	
 	c.beginPath();
 	c.moveTo(triangle.A.x, triangle.A.y);
 	c.lineTo(triangle.B.x, triangle.B.y);
@@ -17,15 +15,15 @@ function drawTriangle(triangle) {
 	c.fill();
 }
 function fadeInTriangle(triangle) {
-	for (var i = 0; i<100; i++) {
-		window.setTimeout(drawTriangle(triangle), i*50);
+	for (var i = 0; i<10; i++) {
+		window.setTimeout(function() {drawTriangle(triangle);}, i*50);
 	}
 }
 
 $(function(){
 	c = document.getElementById('canvas').getContext('2d');
-	var A = {x:300, y:300};
-	var r = 300;
+	var A = {x:200, y:200};
+	var r = 250;
 	var theta = 36 * (Math.PI/180);
 	var outerPoints = {};
 	for (var i=0; i<11; i++) {
@@ -33,7 +31,8 @@ $(function(){
 		var y = r * Math.sin( i*theta ) + A.y;
 		outerPoints[i] = {x:x, y:y};
 	}
-	for (var i=0; i<11; i++) {
+	var triangles = [];
+	for (var i=0; i<10; i++) {
 		if (i%2 == 0) {
 			var triangle = {A:A, B:outerPoints[i], C:outerPoints[(i+1)%10], color:0};
 		} else {
@@ -41,16 +40,49 @@ $(function(){
 		}
 		triangles.push(triangle)
 	}
-	
-	triangles = triangles.concat(subdivide());
-	//triangles = triangles.concat(subdivide());
-
-	for (var i=0; i<triangles.length; i++) {
-		window.setTimeout(fadeInTriangle(triangles[i]), 500);
+	triangleGroups[0] = triangles;
+	for (var i = 1; i<6; i++) {
+		triangleGroups[i] = subdivide(triangleGroups[i-1]);
 	}
+	
+	drawNextTriangle();
 });
 
-function subdivide() {
+var indexOfSet = 0;
+var indexInSet = 0;
+function drawNextTriangle() {
+	var relativeIndex = getRelativeIndex();
+	var triangle = triangleGroups[relativeIndex][indexInSet];
+	console.log(relativeIndex + " | " + indexInSet + " | " + triangle);
+	fadeInTriangle(triangle);
+	if (indexInSet < triangleGroups[relativeIndex].length - 1) {
+		indexInSet++;
+	} else {
+		indexInSet = 0;
+		indexOfSet++;
+	}
+	window.setTimeout(drawNextTriangle, 50);
+}
+
+function getTriangleColor(triangle) {
+	var evenIteration = Math.floor(indexOfSet / triangleGroups.length) %2 == 0;
+	if (triangle.color && evenIteration) {
+		return 'white';
+	} else if (!triangle.color && !evenIteration) {
+		return 'white';
+	}
+	return 'black';
+}
+
+function getRelativeIndex() {
+	if (indexOfSet % triangleGroups.length > triangleGroups.length/2) {
+		return triangleGroups.length - indexOfSet % triangleGroups.length;
+	} else  {
+		return indexOfSet % triangleGroups.length;
+	}
+}
+
+function subdivide(triangles) {
     var result = [];
     for (var i=0; i<triangles.length; i++) { 
 		var triangle = triangles[i];
@@ -63,8 +95,8 @@ function subdivide() {
             var x = A.x + (B.x - A.x) / goldenRatio;
             var y = A.y + (B.y - A.y) / goldenRatio;
             var P = {x:x, y:y};
+			result.push({A:P, B:C, C:A, color:1});
             result.push({A:C, B:P, C:B, color:0});
-            result.push({A:B, B:C, C:A, color:1});
         } else {
             // Subdivide blue triangle
             var Q = {x:B.x + (A.x - B.x) / goldenRatio, y:B.y + (A.y - B.y) / goldenRatio};
